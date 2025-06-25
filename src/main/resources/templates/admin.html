@@ -3,77 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Manage Portfolio</title>
+    <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="/admin.css">
 </head>
-<body>
-<div class="sidebar" id="sidebar">
-    <h3 class="text-xl font-bold text-center mb-6">Admin Dashboard</h3>
-    <a href="/"><i class="fas fa-home mr-2"></i> Home</a>
-    <a href="#projects"><i class="fas fa-project-diagram mr-2"></i> Manage Projects</a>
-    <a href="/resume/download"><i class="fas fa-file-pdf mr-2"></i> Resume</a>
-</div>
-
-<div class="main-content">
-    <button class="toggle-sidebar btn btn-primary d-md-none mb-4" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
-    <h1 class="text-3xl font-bold text-gray-800 mb-6 fade-in">Manage Projects</h1>
-    <form id="project-form" class="project-form fade-in">
-        <div class="mb-4">
-            <label for="title" class="block text-sm font-medium text-gray-700">Project Title</label>
-            <input type="text" class="form-control mt-1" id="title" required>
+<body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900 text-white transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl">
+        <div class="flex items-center justify-between p-6 border-b border-blue-700">
+            <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+                <i class="fas fa-cog mr-2"></i>Admin Panel
+            </h2>
+            <button onclick="toggleSidebar()" class="text-blue-300 hover:text-white transition-colors duration-200">
+                <i class="fas fa-times text-xl"></i>
+            </button>
         </div>
-        <div class="mb-4">
-            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-            <textarea class="form-control mt-1" id="description" rows="4" required></textarea>
-        </div>
-        <div class="mb-4">
-            <label for="techStack" class="block text-sm font-medium text-gray-700">Tech Stack</label>
-            <select id="techStack" class="form-control mt-1" onchange="handleTechStackSelection()">
-                <option value="">Select a stack...</option>
-                <option th:each="stack : ${stacks}" th:key="${stack.id}" 
-                        th:value="${stack.name}" th:text="${stack.name}">Stack Name</option>
-            </select>
-            <div id="selectedTechStack" class="mt-2 flex flex-wrap gap-2"></div>
-        </div>
-        <div class="mb-4">
-            <label for="thumbnail" class="block text-sm font-medium text-gray-700">Thumbnail URL</label>
-            <input type="text" class="form-control mt-1" id="thumbnail" placeholder="e.g., https://example.com/image.jpg">
-        </div>
-        <input type="hidden" id="projectId">
-        <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i> Save Project</button>
-        <button type="button" class="btn btn-secondary ml-2" id="cancelEdit" style="display: none;">Cancel</button>
-    </form>
-
-    <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4 fade-in">Project List</h2>
-    <ul id="project-list" class="list-group fade-in">
-        <li th:each="project : ${projects}" th:key="${project.id}" class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-                <h5 class="mb-1" th:text="${project.title}">Project Title</h5>
-                <p class="mb-1 text-muted" th:text="${project.description}">Project description</p>
-                <small class="text-muted">
-                    <span th:each="stack : ${project.stacks}" th:key="${stack.id}" 
-                          class="badge bg-primary me-1" th:text="${stack.name}">Tech Stack</span>
-                    <span th:text="${#temporals.format(project.createdAt, 'yyyy-MM-dd HH:mm')}">Created date</span>
-                </small>
+        <nav class="mt-8">
+            <div class="px-6">
+                <a href="/" class="flex items-center px-4 py-3 text-blue-200 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-200 mb-2">
+                    <i class="fas fa-home mr-3"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#projects" class="flex items-center px-4 py-3 text-blue-200 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-200 mb-2">
+                    <i class="fas fa-project-diagram mr-3"></i>
+                    <span>Projects</span>
+                </a>
+                <a href="#stacks" class="flex items-center px-4 py-3 text-blue-200 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-200">
+                    <i class="fas fa-layer-group mr-3"></i>
+                    <span>Tech Stacks</span>
+                </a>
             </div>
-            <div>
-                <button class="btn btn-sm btn-outline-primary me-2" th:onclick="'editProject(' + ${project.id} + ')'">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-                <button class="btn btn-sm btn-outline-danger" th:onclick="'deleteProject(' + ${project.id} + ')'">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-            </div>
-        </li>
-    </ul>
-</div>
+        </nav>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/admin.js"></script>
+    <!-- Main Content -->
+    <div class="ml-0 transition-all duration-300 ease-in-out">
+        <!-- Header -->
+        <header class="bg-white/80 backdrop-blur-sm shadow-lg border-b border-blue-100">
+            <div class="flex items-center justify-between p-4">
+                <div class="flex items-center">
+                    <button onclick="toggleSidebar()" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 mr-4">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        <i class="fas fa-tools mr-2"></i>Project Management
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors duration-200">
+                        <i class="fas fa-external-link-alt mr-1"></i>View Site
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="p-8">
+            <!-- Project Form Section -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
+                <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    <i class="fas fa-plus-circle mr-3"></i>Add New Project
+                </h2>
+                
+                <form id="project-form" class="space-y-6">
+                    <input type="hidden" id="projectId">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="title" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-heading mr-1"></i>Project Title
+                            </label>
+                            <input type="text" id="title" name="title" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                        </div>
+                        
+                        <div>
+                            <label for="projectUrl" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-link mr-1"></i>Project URL
+                            </label>
+                            <input type="url" id="projectUrl" name="projectUrl" 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                   placeholder="https://example.com">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-align-left mr-1"></i>Description
+                        </label>
+                        <textarea id="description" name="description" rows="4" required 
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="techStack" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <i class="fas fa-layer-group mr-1"></i>Tech Stack
+                        </label>
+                        <div class="flex flex-wrap gap-2 mb-3" id="selectedTechStack"></div>
+                        <select id="techStack" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                            <option value="">Select a tech stack...</option>
+                            <option value="Java">Java</option>
+                            <option value="Spring Boot">Spring Boot</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="React">React</option>
+                            <option value="Vue.js">Vue.js</option>
+                            <option value="Node.js">Node.js</option>
+                            <option value="Python">Python</option>
+                            <option value="Django">Django</option>
+                            <option value="Flask">Flask</option>
+                            <option value="MySQL">MySQL</option>
+                            <option value="PostgreSQL">PostgreSQL</option>
+                            <option value="MongoDB">MongoDB</option>
+                            <option value="Docker">Docker</option>
+                            <option value="AWS">AWS</option>
+                            <option value="CI/CD">CI/CD</option>
+                            <option value="Git">Git</option>
+                            <option value="HTML/CSS">HTML/CSS</option>
+                            <option value="Bootstrap">Bootstrap</option>
+                            <option value="Tailwind CSS">Tailwind CSS</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex space-x-4">
+                        <button type="submit" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                            <i class="fas fa-save mr-2"></i>Save Project
+                        </button>
+                        <button type="button" id="cancelEdit" class="bg-gray-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-200" style="display: none;">
+                            <i class="fas fa-times mr-2"></i>Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Projects List Section -->
+            <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    <i class="fas fa-list mr-3"></i>Projects List
+                </h2>
+                
+                <ul id="project-list" class="space-y-4">
+                    <!-- Projects will be loaded here -->
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/admin.js"></script>
 </body>
 </html> 

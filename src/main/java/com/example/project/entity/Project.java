@@ -24,8 +24,8 @@ public class Project {
     @Column(columnDefinition = "TEXT")
     private String description;
     
-    @Column(name = "thumbnail_url")
-    private String thumbnailUrl;
+    @Column(name = "project_url")
+    private String projectUrl;
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;

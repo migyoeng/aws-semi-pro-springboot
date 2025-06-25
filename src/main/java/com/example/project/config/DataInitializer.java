@@ -185,42 +185,42 @@ public class DataInitializer implements CommandLineRunner {
         Project project1 = new Project();
         project1.setTitle("포트폴리오 웹사이트");
         project1.setDescription("Spring Boot와 Thymeleaf를 사용한 개인 포트폴리오 웹사이트입니다. 프로젝트 관리 기능과 반응형 디자인을 포함합니다.");
-        project1.setThumbnailUrl("https://source.unsplash.com/random/400x200/?website");
+        project1.setProjectUrl("https://www.notion.so/portfolio-website-project");
         project1.setStacks(new HashSet<>(Arrays.asList(java, springBoot, thymeleaf, bootstrap, jpa)));
         
         // 프로젝트 2: AWS 클라우드 인프라
         Project project2 = new Project();
         project2.setTitle("AWS 클라우드 인프라");
         project2.setDescription("AWS 서비스를 활용한 클라우드 인프라 구축 프로젝트입니다. EC2, RDS, S3 등을 활용했습니다.");
-        project2.setThumbnailUrl("https://source.unsplash.com/random/400x200/?cloud");
+        project2.setProjectUrl("https://www.notion.so/aws-cloud-infrastructure");
         project2.setStacks(new HashSet<>(Arrays.asList(aws, ec2, rds, s3, cloudFormation)));
         
         // 프로젝트 3: Python 데이터 분석
         Project project3 = new Project();
         project3.setTitle("Python 데이터 분석");
         project3.setDescription("Python을 사용한 데이터 분석 및 시각화 프로젝트입니다. pandas, matplotlib, seaborn을 활용했습니다.");
-        project3.setThumbnailUrl("https://source.unsplash.com/random/400x200/?data");
+        project3.setProjectUrl("https://www.notion.so/python-data-analysis");
         project3.setStacks(new HashSet<>(Arrays.asList(python, pandas, matplotlib, seaborn, jupyter)));
         
         // 프로젝트 4: React 쇼핑몰
         Project project4 = new Project();
         project4.setTitle("React 쇼핑몰");
         project4.setDescription("React와 Node.js를 사용한 온라인 쇼핑몰 프로젝트입니다. Redux를 활용한 상태 관리와 결제 시스템을 구현했습니다.");
-        project4.setThumbnailUrl("https://source.unsplash.com/random/400x200/?shopping");
+        project4.setProjectUrl("https://www.notion.so/react-shopping-mall");
         project4.setStacks(new HashSet<>(Arrays.asList(react, javascript, nodejs, redux, mongodb)));
         
         // 프로젝트 5: Spring Boot REST API
         Project project5 = new Project();
         project5.setTitle("Spring Boot REST API");
         project5.setDescription("Spring Boot를 사용한 RESTful API 서버입니다. JWT 인증, Swagger 문서화, MySQL 데이터베이스를 포함합니다.");
-        project5.setThumbnailUrl("https://source.unsplash.com/random/400x200/?api");
+        project5.setProjectUrl("https://www.notion.so/spring-boot-rest-api");
         project5.setStacks(new HashSet<>(Arrays.asList(java, springBoot, springSecurity, jwt, mysql)));
         
         // 프로젝트 6: Docker 컨테이너화
         Project project6 = new Project();
         project6.setTitle("Docker 컨테이너화");
         project6.setDescription("Docker를 사용한 애플리케이션 컨테이너화 프로젝트입니다. Docker Compose를 활용한 멀티 컨테이너 환경을 구축했습니다.");
-        project6.setThumbnailUrl("https://source.unsplash.com/random/400x200/?docker");
+        project6.setProjectUrl("https://www.notion.so/docker-containerization");
         project6.setStacks(new HashSet<>(Arrays.asList(docker, dockerCompose, linux, cicd)));
         
         projectRepository.save(project1);
