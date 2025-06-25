@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -32,13 +34,26 @@ public class ProjectController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
+    private boolean isAdminAuthed() {
+        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attr == null) return false;
+        Object flag = attr.getRequest().getSession().getAttribute("isAdminAuthed");
+        return Boolean.TRUE.equals(flag);
+    }
+    
     @PostMapping
     public ResponseEntity<Project> createProject(@RequestBody Project project) {
+        if (!isAdminAuthed()) {
+            return ResponseEntity.status(403).build();
+        }
         return ResponseEntity.ok(projectService.saveProject(project));
     }
     
     @PutMapping("/{id}")
     public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project project) {
+        if (!isAdminAuthed()) {
+            return ResponseEntity.status(403).build();
+        }
         try {
             Project updatedProject = projectService.updateProject(id, project);
             return ResponseEntity.ok(updatedProject);
@@ -49,6 +64,9 @@ public class ProjectController {
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
+        if (!isAdminAuthed()) {
+            return ResponseEntity.status(403).build();
+        }
         projectService.deleteProject(id);
         return ResponseEntity.ok().build();
     }

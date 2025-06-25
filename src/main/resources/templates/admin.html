@@ -10,147 +10,189 @@
     <link rel="stylesheet" href="/admin.css">
 </head>
 <body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen">
-    <!-- Sidebar -->
-    <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900 text-white transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl">
-        <div class="flex items-center justify-between p-6 border-b border-blue-700">
-            <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
-                <i class="fas fa-cog mr-2"></i>Admin Panel
-            </h2>
-            <button onclick="toggleSidebar()" class="text-blue-300 hover:text-white transition-colors duration-200">
-                <i class="fas fa-times text-xl"></i>
-            </button>
+    <!-- 관리자 암호 입력 모달 -->
+    <div id="authModal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.4);z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <div style="background:white;padding:2rem 2.5rem;border-radius:1rem;box-shadow:0 2px 16px rgba(0,0,0,0.2);min-width:320px;">
+            <h2 style="font-size:1.5rem;font-weight:bold;margin-bottom:1.5rem;text-align:center;">관리자 인증</h2>
+            <input type="password" id="adminPassword" placeholder="관리자 암호 입력" style="width:100%;padding:0.75rem;font-size:1rem;border:1px solid #ccc;border-radius:0.5rem;margin-bottom:1rem;">
+            <button id="authBtn" style="width:100%;padding:0.75rem;font-size:1rem;background:linear-gradient(90deg,#6366f1,#a21caf);color:white;border:none;border-radius:0.5rem;font-weight:bold;">확인</button>
+            <div id="authError" style="color:red;text-align:center;margin-top:0.75rem;display:none;">암호가 올바르지 않습니다.</div>
         </div>
-        <nav class="mt-8">
-            <div class="px-6">
-                <a href="/" class="flex items-center px-4 py-3 text-blue-200 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-200 mb-2">
-                    <i class="fas fa-home mr-3"></i>
-                    <span>Home</span>
-                </a>
-                <a href="#projects" class="flex items-center px-4 py-3 text-blue-200 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-200 mb-2">
-                    <i class="fas fa-project-diagram mr-3"></i>
-                    <span>Projects</span>
-                </a>
-                <a href="#stacks" class="flex items-center px-4 py-3 text-blue-200 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-200">
-                    <i class="fas fa-layer-group mr-3"></i>
-                    <span>Tech Stacks</span>
-                </a>
-            </div>
-        </nav>
     </div>
-
-    <!-- Main Content -->
-    <div class="ml-0 transition-all duration-300 ease-in-out">
-        <!-- Header -->
-        <header class="bg-white/80 backdrop-blur-sm shadow-lg border-b border-blue-100">
-            <div class="flex items-center justify-between p-4">
-                <div class="flex items-center">
-                    <button onclick="toggleSidebar()" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 mr-4">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                    <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                        <i class="fas fa-tools mr-2"></i>Project Management
-                    </h1>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors duration-200">
-                        <i class="fas fa-external-link-alt mr-1"></i>View Site
+    <div id="mainContent" style="display:none;">
+        <!-- Sidebar -->
+        <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-blue-900 via-indigo-900 to-purple-900 text-white transform -translate-x-full transition-transform duration-300 ease-in-out shadow-2xl">
+            <div class="flex items-center justify-between p-6 border-b border-blue-700">
+                <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+                    <i class="fas fa-cog mr-2"></i>Admin Panel
+                </h2>
+                <button onclick="toggleSidebar()" class="text-blue-300 hover:text-white transition-colors duration-200">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <nav class="mt-8">
+                <div class="px-6">
+                    <a href="/" class="flex items-center px-4 py-3 text-blue-200 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-200 mb-2">
+                        <i class="fas fa-home mr-3"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="#projects" class="flex items-center px-4 py-3 text-blue-200 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-200 mb-2">
+                        <i class="fas fa-project-diagram mr-3"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a href="#stacks" class="flex items-center px-4 py-3 text-blue-200 hover:bg-blue-800 hover:text-white rounded-lg transition-all duration-200">
+                        <i class="fas fa-layer-group mr-3"></i>
+                        <span>Tech Stacks</span>
                     </a>
                 </div>
-            </div>
-        </header>
+            </nav>
+        </div>
 
-        <!-- Content -->
-        <main class="p-8">
-            <!-- Project Form Section -->
-            <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
-                <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    <i class="fas fa-plus-circle mr-3"></i>Add New Project
-                </h2>
-                
-                <form id="project-form" class="space-y-6">
-                    <input type="hidden" id="projectId">
+        <!-- Main Content -->
+        <div class="ml-0 transition-all duration-300 ease-in-out">
+            <!-- Header -->
+            <header class="bg-white/80 backdrop-blur-sm shadow-lg border-b border-blue-100">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center">
+                        <button onclick="toggleSidebar()" class="text-gray-600 hover:text-blue-600 transition-colors duration-200 mr-4">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <i class="fas fa-tools mr-2"></i>Project Management
+                        </h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors duration-200">
+                            <i class="fas fa-external-link-alt mr-1"></i>View Site
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="p-8">
+                <!-- Project Form Section -->
+                <div class="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-gray-100">
+                    <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        <i class="fas fa-plus-circle mr-3"></i>Add New Project
+                    </h2>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="title" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-heading mr-1"></i>Project Title
-                            </label>
-                            <input type="text" id="title" name="title" required 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                    <form id="project-form" class="space-y-6">
+                        <input type="hidden" id="projectId">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="title" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-heading mr-1"></i>Project Title
+                                </label>
+                                <input type="text" id="title" name="title" required 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                            </div>
+                            
+                            <div>
+                                <label for="projectUrl" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <i class="fas fa-link mr-1"></i>Project URL
+                                </label>
+                                <input type="url" id="projectUrl" name="projectUrl" 
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                       placeholder="https://example.com">
+                            </div>
                         </div>
                         
                         <div>
-                            <label for="projectUrl" class="block text-sm font-semibold text-gray-700 mb-2">
-                                <i class="fas fa-link mr-1"></i>Project URL
+                            <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-align-left mr-1"></i>Description
                             </label>
-                            <input type="url" id="projectUrl" name="projectUrl" 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                                   placeholder="https://example.com">
+                            <textarea id="description" name="description" rows="4" required 
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"></textarea>
                         </div>
-                    </div>
-                    
-                    <div>
-                        <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
-                            <i class="fas fa-align-left mr-1"></i>Description
-                        </label>
-                        <textarea id="description" name="description" rows="4" required 
-                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"></textarea>
-                    </div>
-                    
-                    <div>
-                        <label for="techStack" class="block text-sm font-semibold text-gray-700 mb-2">
-                            <i class="fas fa-layer-group mr-1"></i>Tech Stack
-                        </label>
-                        <div class="flex flex-wrap gap-2 mb-3" id="selectedTechStack"></div>
-                        <select id="techStack" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
-                            <option value="">Select a tech stack...</option>
-                            <option value="Java">Java</option>
-                            <option value="Spring Boot">Spring Boot</option>
-                            <option value="JavaScript">JavaScript</option>
-                            <option value="React">React</option>
-                            <option value="Vue.js">Vue.js</option>
-                            <option value="Node.js">Node.js</option>
-                            <option value="Python">Python</option>
-                            <option value="Django">Django</option>
-                            <option value="Flask">Flask</option>
-                            <option value="MySQL">MySQL</option>
-                            <option value="PostgreSQL">PostgreSQL</option>
-                            <option value="MongoDB">MongoDB</option>
-                            <option value="Docker">Docker</option>
-                            <option value="AWS">AWS</option>
-                            <option value="CI/CD">CI/CD</option>
-                            <option value="Git">Git</option>
-                            <option value="HTML/CSS">HTML/CSS</option>
-                            <option value="Bootstrap">Bootstrap</option>
-                            <option value="Tailwind CSS">Tailwind CSS</option>
-                        </select>
-                    </div>
-                    
-                    <div class="flex space-x-4">
-                        <button type="submit" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-                            <i class="fas fa-save mr-2"></i>Save Project
-                        </button>
-                        <button type="button" id="cancelEdit" class="bg-gray-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-200" style="display: none;">
-                            <i class="fas fa-times mr-2"></i>Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
+                        
+                        <div>
+                            <label for="techStack" class="block text-sm font-semibold text-gray-700 mb-2">
+                                <i class="fas fa-layer-group mr-1"></i>Tech Stack
+                            </label>
+                            <div class="flex flex-wrap gap-2 mb-3" id="selectedTechStack"></div>
+                            <select id="techStack" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200">
+                                <option value="">Select a tech stack...</option>
+                                <option value="Java">Java</option>
+                                <option value="Spring Boot">Spring Boot</option>
+                                <option value="JavaScript">JavaScript</option>
+                                <option value="React">React</option>
+                                <option value="Vue.js">Vue.js</option>
+                                <option value="Node.js">Node.js</option>
+                                <option value="Python">Python</option>
+                                <option value="Django">Django</option>
+                                <option value="Flask">Flask</option>
+                                <option value="MySQL">MySQL</option>
+                                <option value="PostgreSQL">PostgreSQL</option>
+                                <option value="MongoDB">MongoDB</option>
+                                <option value="Docker">Docker</option>
+                                <option value="AWS">AWS</option>
+                                <option value="CI/CD">CI/CD</option>
+                                <option value="Git">Git</option>
+                                <option value="HTML/CSS">HTML/CSS</option>
+                                <option value="Bootstrap">Bootstrap</option>
+                                <option value="Tailwind CSS">Tailwind CSS</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex space-x-4">
+                            <button type="submit" class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                                <i class="fas fa-save mr-2"></i>Save Project
+                            </button>
+                            <button type="button" id="cancelEdit" class="bg-gray-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-all duration-200" style="display: none;">
+                                <i class="fas fa-times mr-2"></i>Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
-            <!-- Projects List Section -->
-            <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    <i class="fas fa-list mr-3"></i>Projects List
-                </h2>
-                
-                <ul id="project-list" class="space-y-4">
-                    <!-- Projects will be loaded here -->
-                </ul>
-            </div>
-        </main>
+                <!-- Projects List Section -->
+                <div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+                    <h2 class="text-3xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        <i class="fas fa-list mr-3"></i>Projects List
+                    </h2>
+                    
+                    <ul id="project-list" class="space-y-4">
+                        <!-- Projects will be loaded here -->
+                    </ul>
+                </div>
+            </main>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/admin.js"></script>
+    <script>
+        function showAdminPage() {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('mainContent').style.display = '';
+        }
+        function hideAdminPage() {
+            document.getElementById('authModal').style.display = 'flex';
+            document.getElementById('mainContent').style.display = 'none';
+        }
+        window.addEventListener('DOMContentLoaded', function() {
+            if (sessionStorage.getItem('isAdminAuthed') === 'true') {
+                showAdminPage();
+            } else {
+                hideAdminPage();
+            }
+            document.getElementById('authBtn').onclick = function() {
+                const pw = document.getElementById('adminPassword').value;
+                if (pw === 'rootroot') {
+                    sessionStorage.setItem('isAdminAuthed', 'true');
+                    fetch('/api/admin-auth', {method:'POST', credentials:'same-origin'}).then(()=>{
+                        showAdminPage();
+                    });
+                } else {
+                    document.getElementById('authError').style.display = 'block';
+                }
+            };
+            document.getElementById('adminPassword').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') document.getElementById('authBtn').click();
+            });
+        });
+    </script>
 </body>
 </html> 
