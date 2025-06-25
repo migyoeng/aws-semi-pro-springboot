@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semi Temp Project</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand font-bold text-xl text-blue-600" href="#">My Portfolio</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link text-gray-700 hover:text-blue-600" href="#projects">Projects</a></li>
+                <li class="nav-item"><a class="nav-link text-gray-700 hover:text-blue-600" href="/resume/download">Resume</a></li>
+                <li class="nav-item"><a class="nav-link text-gray-700 hover:text-blue-600" href="/admin">Admin</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="fade-in">Welcome to My Portfolio</h1>
+        <p class="text-lg mt-4 fade-in">Explore my projects and journey in technology</p>
+        <a href="#projects" class="btn btn-primary btn-lg mt-6 fade-in">Discover Now</a>
+    </div>
+</section>
+
+<section id="projects" class="container py-12">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-8 fade-in">My Projects</h2>
+    
+    <div class="flex justify-center mb-8 fade-in">
+        <div class="flex flex-wrap justify-center gap-2">
+            <!-- 기본 스택 버튼들 (처음 5개) -->
+            <button class="filter-btn bg-gray-100 text-gray-700 px-3 py-2 rounded" data-stack="all">All</button>
+            <button th:each="stack, iterStat : ${stacks}" th:key="${stack.id}" 
+                    th:if="${iterStat.index < 5}"
+                    class="filter-btn bg-gray-100 text-gray-700 px-3 py-2 rounded" 
+                    th:data-stack="${stack.name}"
+                    th:text="${stack.name}">Stack Name</button>
+            
+            <!-- 더보기 버튼 (스택이 5개 이상일 때만 표시) -->
+            <button th:if="${#lists.size(stacks) > 5}" 
+                    id="showMoreBtn" 
+                    class="filter-btn bg-blue-500 text-white px-3 py-2 rounded">
+                <i class="fas fa-chevron-down mr-1"></i>더보기
+            </button>
+        </div>
+    </div>
+    
+    <!-- 추가 스택 버튼들 (처음에는 숨김) -->
+    <div id="additionalStacks" class="flex justify-center mb-8" style="display: none;">
+        <div class="flex flex-wrap justify-center gap-2">
+            <button th:each="stack, iterStat : ${stacks}" th:key="${stack.id}" 
+                    th:if="${iterStat.index >= 5}"
+                    class="filter-btn bg-gray-100 text-gray-700 px-3 py-2 rounded" 
+                    th:data-stack="${stack.name}"
+                    th:text="${stack.name}">Stack Name</button>
+        </div>
+    </div>
+    
+    <div id="project-list" class="row">
+        <div th:each="project : ${projects}" th:key="${project.id}" class="col-md-6 col-lg-4 mb-4 project-item">
+            <div class="card h-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <img th:if="${project.thumbnailUrl}" th:src="${project.thumbnailUrl}" class="card-img-top" alt="Project thumbnail" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title font-bold text-lg" th:text="${project.title}">Project Title</h5>
+                    <p class="card-text text-gray-600" th:text="${project.description}">Project description</p>
+                    <div class="mt-3">
+                        <span th:each="stack : ${project.stacks}" th:key="${stack.id}" 
+                              class="badge bg-primary me-1 mb-1" 
+                              th:text="${stack.name}"
+                              th:attr="data-stack='${stack.name}'">Tech Stack</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <small class="text-muted" th:text="${#temporals.format(project.createdAt, 'yyyy-MM-dd')}">Created date</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container text-center">
+        <p class="text-gray-300">© 2025 My Portfolio. Crafted with <i class="fas fa-heart text-red-500"></i> and AWS.</p>
+        <div class="mt-4">
+            <a href="#" class="text-gray-400 mx-2 hover:text-blue-400"><i class="fab fa-github"></i></a>
+            <a href="#" class="text-gray-400 mx-2 hover:text-blue-400"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/index.js"></script>
+</body>
+</html> 
