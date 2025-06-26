@@ -2,14 +2,17 @@ package com.example.project.config;
 
 import com.example.project.entity.Project;
 import com.example.project.entity.Stack;
+import com.example.project.entity.MetricData;
 import com.example.project.repository.ProjectRepository;
 import com.example.project.repository.StackRepository;
+import com.example.project.repository.MetricDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.time.LocalDateTime;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -20,6 +23,9 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private StackRepository stackRepository;
     
+    @Autowired
+    private MetricDataRepository metricDataRepository;
+    
     @Override
     public void run(String... args) throws Exception {
         // 기존 데이터가 없을 때만 샘플 데이터 추가
@@ -28,6 +34,9 @@ public class DataInitializer implements CommandLineRunner {
         }
         if (projectRepository.count() == 0) {
             createSampleProjects();
+        }
+        if (metricDataRepository.count() == 0) {
+            createSampleMetrics();
         }
     }
     
@@ -231,5 +240,37 @@ public class DataInitializer implements CommandLineRunner {
         projectRepository.save(project6);
         
         System.out.println("샘플 프로젝트 데이터가 생성되었습니다.");
+    }
+
+    private void createSampleMetrics() {
+        LocalDateTime now = LocalDateTime.now();
+        
+        // EC2 샘플 메트릭
+        MetricData ec2Cpu = new MetricData("EC2", "tempEC2PUB", "CPUUtilization", 45.2, "Percent", now);
+        MetricData ec2NetworkIn = new MetricData("EC2", "tempEC2PUB", "NetworkIn", 1024000.0, "Bytes", now);
+        MetricData ec2NetworkOut = new MetricData("EC2", "tempEC2PUB", "NetworkOut", 512000.0, "Bytes", now);
+        
+        // RDS 샘플 메트릭
+        MetricData rdsCpu = new MetricData("RDS", "tempRDS", "CPUUtilization", 12.8, "Percent", now);
+        MetricData rdsConnections = new MetricData("RDS", "tempRDS", "DatabaseConnections", 5.0, "Count", now);
+        
+        // ALB 샘플 메트릭
+        MetricData albRequests = new MetricData("ALB", "tempALB", "RequestCount", 1250.0, "Count", now);
+        
+        // Target Group 샘플 메트릭
+        MetricData tgHealthyHosts = new MetricData("TG", "tempTG", "HealthyHostCount", 2.0, "Count", now);
+        MetricData tgUnhealthyHosts = new MetricData("TG", "tempTG", "UnHealthyHostCount", 0.0, "Count", now);
+        MetricData tgResponseTime = new MetricData("TG", "tempTG", "TargetResponseTime", 0.045, "Seconds", now);
+        MetricData tgRequests = new MetricData("TG", "tempTG", "RequestCount", 1250.0, "Count", now);
+        
+        // 메트릭 데이터 저장
+        metricDataRepository.saveAll(Arrays.asList(
+            ec2Cpu, ec2NetworkIn, ec2NetworkOut,
+            rdsCpu, rdsConnections,
+            albRequests,
+            tgHealthyHosts, tgUnhealthyHosts, tgResponseTime, tgRequests
+        ));
+        
+        System.out.println("샘플 메트릭 데이터가 생성되었습니다.");
     }
 } 
